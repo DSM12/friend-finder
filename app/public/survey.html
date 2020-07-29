@@ -30,7 +30,7 @@
 
         <h2>Question 1)</h2>
         <p>How likely are you to engage in conversation with a stanger?</p>
-        <select class="custom-select" style="width: 180px;">
+        <select class="custom-select" style="width: 180px;" id="q1">
             <option selected>Select an option</option>
             <option value="1">1 (Strongly Disagree)</option>
             <option value="2">2</option>
@@ -42,7 +42,7 @@
 
         <h2>Question 2)</h2>
         <p>It is often difficult for you to relate to other people’s feelings.</p>
-        <select class="custom-select" style="width: 180px;">
+        <select class="custom-select" style="width: 180px;" id="q2">
 
             <option selected>Select an option</option>
             <option value="1">1 (Strongly Disagree)</option>
@@ -54,7 +54,7 @@
 
         <h2>Question 3)</h2>
         <p>You rarely need time to yourself</p>
-        <select class="custom-select" style="width: 180px;">
+        <select class="custom-select" style="width: 180px;" id="q3">
             <option selected>Select an option</option>
             <option value="1">1 (Strongly Disagree)</option>
             <option value="2">2</option>
@@ -65,7 +65,7 @@
 
         <h2>Question 4)</h2>
         <p>In a discussion, your word matters most</p>
-        <select class="custom-select" style="width: 180px;">
+        <select class="custom-select" style="width: 180px;" id="q4">
             <option selected>Select an option</option>
             <option value="1">1 (Strongly Disagree)</option>
             <option value="2">2</option>
@@ -76,7 +76,7 @@
 
         <h2>Question 5)</h2>
         <p>You "play" well with others</p>
-        <select class="custom-select" style="width: 180px;">
+        <select class="custom-select" style="width: 180px;" id="q5">
             <option selected>Select an option</option>
             <option value="1">1 (Strongly Disagree)</option>
             <option value="2">2</option>
@@ -87,7 +87,7 @@
 
         <h2>Question 6)</h2>
         <p>Religious and policatal conversations are appropriate to have at a work place</p>
-        <select class="custom-select" style="width: 180px;">
+        <select class="custom-select" style="width: 180px;" id="q6">
             <option selected>Select an option</option>
             <option value="1">1 (Strongly Disagree)</option>
             <option value="2">2</option>
@@ -98,7 +98,7 @@
 
         <h2>Question 7)</h2>
         <p>You are a morning person</p>
-        <select class="custom-select" style="width: 180px;">
+        <select class="custom-select" style="width: 180px;" id="q7">
             <option selected>Select an option</option>
             <option value="1">1 (Strongly Disagree)</option>
             <option value="2">2</option>
@@ -109,7 +109,7 @@
 
         <h2>Question 8)</h2>
         <p>You wouldve chosen the red pill over the blue pill</p>
-        <select class="custom-select" style="width: 180px;">
+        <select class="custom-select" style="width: 180px;" id="q8">
             <option selected>Select an option</option>
             <option value="1">1 (Strongly Disagree)</option>
             <option value="2">2</option>
@@ -120,7 +120,7 @@
 
         <h2>Question 9)</h2>
         <p> Are you likely to avoid confrontation?</p>
-        <select class="custom-select" style="width: 180px;">
+        <select class="custom-select" style="width: 180px;" id="q9">
             <option selected>Select an option</option>
             <option value="1">1 (Strongly Disagree)</option>
             <option value="2">2</option>
@@ -131,7 +131,7 @@
 
         <h2>Question 10)</h2>
         <p>Would you recommend this service to a friend?</p>
-        <select class="custom-select" style="width: 180px;">
+        <select class="custom-select" style="width: 180px;" id="q10">
             <option selected>Select an option</option>
             <option value="1">1 (Strongly Disagree)</option>
             <option value="2">2</option>
@@ -184,6 +184,82 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+        $("#submit").on("click", function (event) {
+            event.preventDefault();
+
+            function validateForm() {
+                var isValid = true;
+                $(".form-control").each(function () {
+                    if ($(this).val() === "") {
+                        isValid = false;
+                    }
+                });
+
+                $(".chosen-select").each(function () {
+                    if ($(this).val() === "") {
+                        isValid = false;
+                    }
+                });
+                return isValid;
+            }
+
+            if (validateForm()) {
+
+                var userData = {
+                    name: $("#name").val().trim(),
+                    photo: $("#photo").val().trim(),
+                    scores: [
+                        $("#q1").val(),
+                        $("#q2").val(),
+                        $("#q3").val(),
+                        $("#q4").val(),
+                        $("#q5").val(),
+                        $("#q6").val(),
+                        $("#q7").val(),
+                        $("#q8").val(),
+                        $("#q9").val(),
+                        $("#q10").val()
+                    ]
+                };
+
+                var currentURL = window.location.origin;
+
+                $.post(currentURL + "/api/friendlist", userData, function (data) {
+                    $("#match-name").text(data.name);
+                    $("#match-photo").attr("src", data.photo);
+                    $("#results-modal").modal("toggle");
+                });
+
+            } else {
+                alert("Please fill out all fields before submitting!");
+            }
+        });
+
+
+        $("#closeMatch").on("click", function (clear) {
+            $("#name").val("");
+            $("#photo").val("");
+            scores: [
+                $("#q1").val(""),
+                $("#q2").val(""),
+                $("#q3").val(""),
+                $("#q4").val(""),
+                $("#q5").val(""),
+                $("#q6").val(""),
+                $("#q7").val(""),
+                $("#q8").val(""),
+                $("#q9").val(""),
+                $("#q10").val("")
+            ]
+            
+        });
+
+
+
+    </script>
+
 </body>
 
 </html>
